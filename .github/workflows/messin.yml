@@ -8,15 +8,19 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    name: Publish to packagist.org
+    name: Set env vars
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Set tag names
         run: |
           echo "TAG_MAIN=$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo "TAG_PATCH=$(date +'%Y%m%d').${{ github.run_number }}" >> $GITHUB_ENV
+  try-it:
+    strategy:
+      matrix:
+        version: ["${{ env.TAG_MAIN }}", "${{ env.TAG_PATCH }}"]
+    runs-on: ubuntu-latest
+    name: Publish to packagist.org
+    steps:
       - name: Update packagist<>github
         run: |
-          echo "${{ env.TAG_MAIN }}"
-          echo "${{ env.TAG_PATCH }}"
+          echo "${{ matrix.version }}"
