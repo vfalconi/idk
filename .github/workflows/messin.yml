@@ -19,8 +19,31 @@ jobs:
     needs: set-tag-values
     strategy:
       matrix:
+        image_name: ${{ github.repository }}
         version: [latest, "${{needs.set-tag-values.outputs.tag_main}}", "${{needs.set-tag-values.outputs.tag_patch}}"]
     steps:
-      - name: did this work
-        run: echo "${{ matrix.version }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to Docker Hub
+        uses: docker/login-action@ef38ec311a7df3f01475313e7c5bb584b74b112a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ matrix.image_name }}:${{ matrix.version }}          
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: index.docker.io/my-docker-hub-namespace/my-docker-hub-repository
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
 
