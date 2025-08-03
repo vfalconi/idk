@@ -15,9 +15,10 @@ jobs:
           echo "TAG_MAIN=$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo "TAG_PATCH=$(date +'%Y%m%d').${{ github.run_number }}" >> $GITHUB_ENV
   try-it:
+    needs: publish
     strategy:
       matrix:
-        version: ["${{ env.TAG_MAIN }}", "${{ env.TAG_PATCH }}"]
+        version: ["${{ TAG_MAIN }}", "${{ TAG_PATCH }}"]
     runs-on: ubuntu-latest
     name: Publish to packagist.org
     steps:
