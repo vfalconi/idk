@@ -28,6 +28,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Create tags
+        run: |
+          git tag -a ${{ matrix.version }}
+          git push origin --tags
       - name: Log in to Docker Hub
         uses: docker/login-action@ef38ec311a7df3f01475313e7c5bb584b74b112a
         with:
