@@ -36,7 +36,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git tag -fa ${{ matrix.version }} -m "Auto-tag on merge/push"
-          git push origin --tags
+          git push origin --tags --force
       - name: Log in to Docker Hub
         uses: docker/login-action@ef38ec311a7df3f01475313e7c5bb584b74b112a
         with:
