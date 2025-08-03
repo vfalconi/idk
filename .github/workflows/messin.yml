@@ -19,7 +19,7 @@ jobs:
     needs: set-tag-values
     strategy:
       matrix:
-        image_name: ${{ github.repository }}
+        image_name: ["${{ github.repository }}"]
         version: [latest, "${{needs.set-tag-values.outputs.tag_main}}", "${{needs.set-tag-values.outputs.tag_patch}}"]
     steps:
       - name: Checkout repository
