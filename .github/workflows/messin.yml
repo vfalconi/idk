@@ -32,7 +32,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[autobuild-images]"
           git config --global user.email "github-actions[autobuild-images]@example.org"
-          git tag -a ${{ matrix.version }}
+          git tag -a ${{ matrix.version }} -m "Auto-tag on push/merge"
           git push origin --tags
       - name: Log in to Docker Hub
         uses: docker/login-action@ef38ec311a7df3f01475313e7c5bb584b74b112a
