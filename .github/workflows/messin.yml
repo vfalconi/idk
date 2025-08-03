@@ -6,22 +6,22 @@ on:
     #types: [published]
 
 jobs:
-  publish:
+  setTagValues:
     runs-on: ubuntu-latest
-    name: Set env vars
+    # Map a step output to a job output
+    outputs:
+      tag_main: ${{ steps.tag_main.outputs.main }}
+      tag_patch: ${{ steps.tag_main.outputs.main }}.${{ github.run_number }}
     steps:
-      - name: Set tag names
-        run: |
-          echo "TAG_MAIN=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          echo "TAG_PATCH=$(date +'%Y%m%d').${{ github.run_number }}" >> $GITHUB_ENV
-  try-it:
-    needs: publish
+      - id: tag_main
+        run: echo "main=$(date +'%Y%m')" >> "$GITHUB_OUTPUT"
+  job2:
+    runs-on: ubuntu-latest
+    needs: setTagValues
     strategy:
       matrix:
-        version: ["${{ TAG_MAIN }}", "${{ TAG_PATCH }}"]
-    runs-on: ubuntu-latest
-    name: Publish to packagist.org
+        version: ["${{needs.setTagValues.outputs.tag_main}}", "${{needs.setTagValues.outputs.tag_patch}}"]
     steps:
-      - name: Update packagist<>github
-        run: |
-          echo "${{ matrix.version }}"
+      - name: did this work
+        run: echo "${{ matrix.version }}"
+
