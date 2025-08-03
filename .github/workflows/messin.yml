@@ -30,6 +30,8 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Create tags
         run: |
+          git config --global user.name "github-actions[autobuild-images]"
+          git config --global user.email "github-actions[autobuild-images]@example.org"
           git tag -a ${{ matrix.version }}
           git push origin --tags
       - name: Log in to Docker Hub
